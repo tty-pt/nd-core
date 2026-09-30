@@ -10,7 +10,7 @@ survives a non-scalar return.
 
 nd-core is also the **sole owner** of that icon. Modules that want to amend an
 icon register a decorator instead of co-implementing `on_icon`, because XY
-cannot observe a co-implemented chain. See `include/ttypt/nd-core.h`.
+cannot observe a co-implemented chain. See `include/nd/core.h`.
 
 ## Install
 
@@ -22,7 +22,7 @@ Installs one file:
 
 ```
 lib/libnd-core.so
-include/ttypt/nd-core.h
+include/nd/core.h
 ```
 
 There is deliberately no `lib/nd-core.so` symlink. `xy_load()` appends `.so`
@@ -66,7 +66,7 @@ drops whatever the owner set.
 ```c
 #include <ttypt/xy-mod.h>
 
-#include <ttypt/nd-core.h>
+#include <nd/core.h>
 
 static struct icon
 my_decorator(struct icon i, unsigned ref __attribute__((unused)), unsigned type,
@@ -117,7 +117,7 @@ PREFIX=/tmp/stage LD_LIBRARY_PATH=/tmp/stage/lib ./test.sh
 
 Both variables are needed because the two halves of the check reach nd-core
 differently. `PREFIX` is a **build** variable: `axil-nd`'s module rule passes
-`-I$(XY_INC)`, so `shop` needs `<ttypt/nd-core.h>` from the install, and without
+`-I$(XY_INC)`, so `shop` needs `<nd/core.h>` from the install, and without
 it the suite dies compiling before it ever boots. `LD_LIBRARY_PATH` is a
 **runtime** variable: `mods.load` says `libnd-core`, and `xy_load("libnd-core")`
 becomes a `dlopen("libnd-core.so")` resolved through the normal loader search

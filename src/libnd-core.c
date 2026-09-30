@@ -18,7 +18,7 @@
  * old `SIC_DEF` + `SIC_DECL` collision. The canonical signature lives in
  * that header for reference and for anyone who wants to CALL on_icon.
  *
- * nd-core is also the single owner of the icon CHAIN, via <ttypt/nd-core.h>:
+ * nd-core is also the single owner of the icon CHAIN, via <nd/core.h>:
  * modules that want to amend an icon (shop, drink, plant, fight) register a
  * decorator instead of co-implementing on_icon, because XY cannot observe a
  * co-implemented chain. See that header and MODS.md §7.
@@ -29,7 +29,7 @@
 #include <nd/xy.h>
 
 #define CORE_IMPL
-#include <ttypt/nd-core.h>
+#include <nd/core.h>
 
 /* --- the decorator table ---------------------------------------------------
  *
