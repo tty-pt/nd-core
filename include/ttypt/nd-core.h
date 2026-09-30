@@ -1,12 +1,12 @@
-/* core.h — nd-core's public interface, for modules that decorate its icons.
+/* nd-core.h — nd-core's public interface, for modules that decorate its icons.
  *
  * Follows the ~/site/mods dependency style rather than a hook everybody shares.
  * Measured there: 163 hooks, each with exactly ONE implementor, zero
  * co-implemented hooks. A consumer names the owner and calls it:
  *
- *	#include "../axil-nd-core/core.h"
+ *	#include <ttypt/nd-core.h>
  *	...
- *	xy_load("../axil-nd-core/core");   // ensure the callee is resident
+ *	xy_load("libnd-core");           // ensure the callee is resident
  *	core_icon_decorate(my_decorator);
  *
  * so a consumer never co-implements `on_icon`. That matters because XY cannot
@@ -14,6 +14,14 @@
  * return survives and `xy.last()` cannot read the previous one mid-dispatch
  * (libxylem-dispatch.c:14-22, `xy_last_ran` is 0 until the dispatch ends).
  * Measured, not inferred -- see MODS.md §7.
+ *
+ * The spelling above resolves to this checkout in a dev build and to the
+ * installed header once `make install` has run, because mk/portable.mk:22/:67
+ * put `$(pwd)/include` ahead of `$(PREFIX)/include` on the command line. Note
+ * the nd/ half below IS part of that: axil-nd installs its module-facing
+ * headers as `nd/xy.h` and `nd/xy-types.h` under `$(PREFIX)/include/`, which
+ * is the same directory the `-I$(PREFIX)/include` above reaches. So this
+ * header needs no private -I of its own.
  *
  * So nd-core is the sole owner of `on_icon` and holds the ordered decorator
  * table. It builds the base icon, then threads it through each registered
@@ -26,14 +34,16 @@
  *
  * Keep this header includable from a TU that XY_IMPLs `core_icon_decorate`:
  * the CORE_IMPL guard is the XY equivalent of the old SIC_DEF/SIC_DECL
- * collision, and the same rule MODS.md §5.0.1 records for papi/nd-hooks.h.
+ * collision, and the same rule MODS.md §0.1 records for nd/hooks.h.
  */
-#ifndef CORE_H
-#define CORE_H
+/* The guard is named for the installed basename, as every other ttypt header is
+ * (corm.h -> CORM_H, joint.h -> JOINT_H): ND_CORE_H, not CORE_H. */
+#ifndef ND_CORE_H
+#define ND_CORE_H
 
 #include <ttypt/xy.h>
 
-#include "papi/nd-xy-types.h"
+#include <nd/xy-types.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,4 +70,4 @@ XY_DECL(int, core_icon_decorate, core_icon_fn, fn);
 }
 #endif
 
-#endif /* CORE_H */
+#endif /* !ND_CORE_H */

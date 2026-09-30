@@ -1,4 +1,4 @@
-/* main.c — nd-core, ported to libxylem.
+/* src/libnd-core.c — nd-core, ported to libxylem.
  *
  * on_icon builds the short glyph+action set the client shows for an object,
  * and is the only reason this module exists. It is the slice's proof that a
@@ -8,26 +8,28 @@
  * failing loudly.
  *
  * Original: tty-pt/nd-core @ 877 B main.c, standalone (not in the nd-basics
- * superproject). Ported unchanged in behaviour; see README.md for the two
- * corrections.
+ * superproject). Ported unchanged in behaviour bar one real bug: the original
+ * read an uninitialised stack slot (see the CORRECTED block below). Two things
+ * were added rather than ported -- an xy_install, and the suite marker moved
+ * after the decorator chain. See README.md, "Notes from the port".
  *
- * This TU XY_IMPLs on_icon and so must NOT include papi/nd-hooks.h -- an
- * XY_IMPL and an XY_DECL of the same name in one TU is the XY equivalent of
- * the old `SIC_DEF` + `SIC_DECL` collision. The canonical signature lives in
+ * This TU XY_IMPLs on_icon and so must NOT include nd/hooks.h -- an
+ * XY_IMPL and an XY_DECL of the same name in one TU is the XY equivalent of the
+ * old `SIC_DEF` + `SIC_DECL` collision. The canonical signature lives in
  * that header for reference and for anyone who wants to CALL on_icon.
  *
- * nd-core is also the single owner of the icon CHAIN, via core.h: modules that
- * want to amend an icon (shop, drink, plant, fight) register a decorator
- * instead of co-implementing on_icon, because XY cannot observe a
- * co-implemented chain. See core.h and MODS.md §7.
+ * nd-core is also the single owner of the icon CHAIN, via <ttypt/nd-core.h>:
+ * modules that want to amend an icon (shop, drink, plant, fight) register a
+ * decorator instead of co-implementing on_icon, because XY cannot observe a
+ * co-implemented chain. See that header and MODS.md §7.
  */
 
 #include <ttypt/xy-mod.h>
 
-#include "papi/nd-xy.h"
+#include <nd/xy.h>
 
 #define CORE_IMPL
-#include "core.h"
+#include <ttypt/nd-core.h>
 
 /* --- the decorator table ---------------------------------------------------
  *
