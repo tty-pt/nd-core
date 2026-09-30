@@ -4,7 +4,7 @@
  * Measured there: 163 hooks, each with exactly ONE implementor, zero
  * co-implemented hooks. A consumer names the owner and calls it:
  *
- *	#include <ttypt/nd-core.h>
+ *	#include <nd/core.h>
  *	...
  *	xy_load("libnd-core");           // ensure the callee is resident
  *	core_icon_decorate(my_decorator);

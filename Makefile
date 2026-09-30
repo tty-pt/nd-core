@@ -1,5 +1,9 @@
 all := libnd-core
-SONAME-libnd-core := nd-core
-LDLIBS-libnd-core := -lxylem -lqsys
+
+LDLIBS-libnd-core := -lxylem
+
+CFLAGS += -I$(shell cd .. && pwd)/axil-nd/include
+
+FOLDER := nd
 
 -include ./../mk/include.mk
