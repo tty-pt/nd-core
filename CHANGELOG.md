@@ -1,4 +1,21 @@
-## 1.0.0
+## 1.0.2
+
+- **macOS: link with `-undefined dynamic_lookup`.** macOS `ld` rejects
+  undefined symbols in a shared library, but `WARN` needs `qsyslog` — an
+  engine-provided function pointer resolved at `dlopen` time (Linux allows
+  this by default). `-undefined dynamic_lookup` is the Darwin equivalent, set
+  as `LDFLAGS-libnd-core-Darwin` so no other platform is affected.
+- **The public header is now `<nd/core.h>`.** `include/ttypt/nd-core.h` moved
+  to `include/nd/core.h`, so it installs beside the other `nd/` headers the
+  modules already include (`<nd/attr.h>`, `<nd/drink.h>`, …) instead of in a
+  `ttypt/` directory nothing reaches by default; `libnd-core.c` and every
+  README example follow (`#include <nd/core.h>`).
+- **Packaging brought in line with the other nd modules**: the Makefile takes
+  mk's `FOLDER := nd` layout, the explicit `SONAME-libnd-core` and the
+  `-lqsys` link dependency are dropped (`LDLIBS := -lxylem`), and the axil-nd
+  sibling `-I` stays a dev-build convenience.
+
+## [1.0.0]
 
 - **nd-core is now an installable library rather than a build artifact of the
   engine.** It builds and installs one file, `lib/libnd-core.so`, plus the public
