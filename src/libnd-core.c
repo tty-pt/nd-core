@@ -28,8 +28,7 @@
 
 #include <nd/xy.h>
 
-#define CORE_IMPL
-#include <nd/core.h>
+#include <nd/core-types.h>
 
 /* --- the decorator table ---------------------------------------------------
  *
