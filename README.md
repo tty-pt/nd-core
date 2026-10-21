@@ -57,6 +57,25 @@ Against a checkout beside this repo it is `-I../axil-nd/include`; both paths are
 on `CFLAGS` at once and a missing `-I` is ignored, so the same command works
 either way.
 
+## In-Game Commands (`man-src/`)
+
+None directly. `nd-core` provides the shared game loop tick, object decorators, and engine heartbeat.
+
+## Packaged Assets (`art/`)
+
+Fallback glyphs, ANSI palettes, and base symbol mappings.
+
+## Wire Protocol & BCP Integration
+
+Supplies decorated `struct icon` representations (color, character, action masks) into `BCP_ITEM` binary packets transmitted to clients.
+
+## Modder Extension Guide
+
+Modders can hook entity appearances using `core_icon_decorate`:
+1. Include `<nd/core.h>` in your module.
+2. Implement a decorator function matching the signature `struct icon (*)(struct icon, unsigned ref, unsigned type, unsigned player_ref)`.
+3. Call `core_icon_decorate(my_decorator)` inside your `xy_install()`.
+
 ## Using it
 
 A decorator is a function that receives the running icon and returns the
