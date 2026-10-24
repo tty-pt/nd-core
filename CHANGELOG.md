@@ -1,4 +1,12 @@
-## 1.0.2
+## [1.0.3]
+
+- **Two-Header Architecture (`<nd/core-types.h>`)**:
+  - Extracted `<nd/core-types.h>` defining shared core object types and bitmasks.
+  - Removed `CORE_IMPL` preprocessor guards.
+- **Documentation**:
+  - Standardized README with man-src, art, and modder guide.
+
+## [1.0.2]
 
 - **macOS: link with `-undefined dynamic_lookup`.** macOS `ld` rejects
   undefined symbols in a shared library, but `WARN` needs `qsyslog` — an
