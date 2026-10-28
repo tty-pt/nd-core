@@ -30,6 +30,10 @@
 
 #include <nd/core-types.h>
 
+typedef struct bio (*core_noise_fn)(struct bio bio, uint32_t he, uint32_t w,
+	uint32_t tm, uint32_t cl);
+typedef sic_str_t (*core_empty_tile_fn)(view_tile_t t, unsigned side, sic_str_t ss);
+
 /* --- the decorator table ---------------------------------------------------
  *
  * Fixed size, indexed, insertion-ordered -- the same shape ~/site/mods uses
@@ -59,6 +63,66 @@ XY_IMPL(int, core_icon_decorate, core_icon_fn, fn)
 	core_icon_decorators[core_icon_n_decorators++] = fn;
 	WARN("nd-core: core_icon_decorate #%u\n", core_icon_n_decorators);
 	return 0;
+}
+
+#define CORE_NOISE_DECORATORS_MAX 16
+static core_noise_fn core_noise_decorators[CORE_NOISE_DECORATORS_MAX];
+static unsigned core_noise_n_decorators;
+
+XY_IMPL(int, core_noise_decorate, core_noise_fn, fn)
+{
+	if (!fn)
+		return 1;
+	if (core_noise_n_decorators == CORE_NOISE_DECORATORS_MAX) {
+		WARN("nd-core: core_noise_decorate: table full (%u)\n",
+			CORE_NOISE_DECORATORS_MAX);
+		return 1;
+	}
+
+	core_noise_decorators[core_noise_n_decorators++] = fn;
+	WARN("nd-core: core_noise_decorate #%u\n", core_noise_n_decorators);
+	return 0;
+}
+
+#define CORE_EMPTY_TILE_DECORATORS_MAX 16
+static core_empty_tile_fn core_empty_tile_decorators[CORE_EMPTY_TILE_DECORATORS_MAX];
+static unsigned core_empty_tile_n_decorators;
+
+XY_IMPL(int, core_empty_tile_decorate, core_empty_tile_fn, fn)
+{
+	if (!fn)
+		return 1;
+	if (core_empty_tile_n_decorators == CORE_EMPTY_TILE_DECORATORS_MAX) {
+		WARN("nd-core: core_empty_tile_decorate: table full (%u)\n",
+			CORE_EMPTY_TILE_DECORATORS_MAX);
+		return 1;
+	}
+
+	core_empty_tile_decorators[core_empty_tile_n_decorators++] = fn;
+	WARN("nd-core: core_empty_tile_decorate #%u\n", core_empty_tile_n_decorators);
+	return 0;
+}
+
+XY_IMPL(struct bio, on_noise, struct bio, bio, uint32_t, he, uint32_t, w,
+	uint32_t, tm, uint32_t, cl)
+{
+	for (unsigned n = 0; n < core_noise_n_decorators; n++)
+		bio = core_noise_decorators[n](bio, he, w, tm, cl);
+	return bio;
+}
+
+XY_IMPL(sic_str_t, on_empty_tile, view_tile_t, t, unsigned, side, sic_str_t, ss)
+{
+	for (unsigned n = 0; n < core_empty_tile_n_decorators; n++) {
+		ss = core_empty_tile_decorators[n](t, side, ss);
+		if (ss.str[0] && ss.str[0] != ' ')
+			return ss;
+	}
+	if (!ss.str[0]) {
+		ss.str[0] = ' ';
+		ss.str[1] = '\0';
+	}
+	return ss;
 }
 
 XY_MODULE_API void
