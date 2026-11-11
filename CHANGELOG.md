@@ -1,3 +1,8 @@
+## [Unreleased] (target: v1.0.4)
+
+### Changed
+- Refactored stllog logging comments, removed add-prefix paths, and cleaned dependencies.
+
 ## [1.0.3]
 
 - **Two-Header Architecture (`<nd/core-types.h>`)**:
@@ -9,7 +14,7 @@
 ## [1.0.2]
 
 - **macOS: link with `-undefined dynamic_lookup`.** macOS `ld` rejects
-  undefined symbols in a shared library, but `WARN` needs `qsyslog` — an
+  undefined symbols in a shared library, but `WARN` needs `stllog` — an
   engine-provided function pointer resolved at `dlopen` time (Linux allows
   this by default). `-undefined dynamic_lookup` is the Darwin equivalent, set
   as `LDFLAGS-libnd-core-Darwin` so no other platform is affected.
@@ -20,7 +25,7 @@
   README example follow (`#include <nd/core.h>`).
 - **Packaging brought in line with the other nd modules**: the Makefile takes
   mk's `FOLDER := nd` layout, the explicit `SONAME-libnd-core` and the
-  `-lqsys` link dependency are dropped (`LDLIBS := -lxylem`), and the axil-nd
+  `-lstele` link dependency are dropped (`LDLIBS := -lxylem`), and the axil-nd
   sibling `-I` stays a dev-build convenience.
 
 ## [1.0.0]
