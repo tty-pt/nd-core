@@ -103,6 +103,36 @@ XY_IMPL(int, core_empty_tile_decorate, core_empty_tile_fn, fn)
 	return 0;
 }
 
+#define CORE_ART_DECORATORS_MAX 16
+static core_art_fn core_art_decorators[CORE_ART_DECORATORS_MAX];
+static unsigned core_art_n_decorators;
+
+XY_IMPL(int, core_art_decorate, core_art_fn, fn)
+{
+	if (!fn)
+		return 1;
+	if (core_art_n_decorators == CORE_ART_DECORATORS_MAX) {
+		WARN("nd-core: core_art_decorate: table full (%u)\n",
+			CORE_ART_DECORATORS_MAX);
+		return 1;
+	}
+
+	core_art_decorators[core_art_n_decorators++] = fn;
+	WARN("nd-core: core_art_decorate #%u\n", core_art_n_decorators);
+	return 0;
+}
+
+XY_IMPL(int, core_art_resolve, unsigned, ref, unsigned, type, char *, buf, size_t, len)
+{
+	if (!buf || !len)
+		return 0;
+	for (unsigned n = 0; n < core_art_n_decorators; n++) {
+		if (core_art_decorators[n](ref, type, buf, len) && buf[0])
+			return 1;
+	}
+	return 0;
+}
+
 XY_IMPL(struct bio, on_noise, struct bio, bio, uint32_t, he, uint32_t, w,
 	uint32_t, tm, uint32_t, cl)
 {

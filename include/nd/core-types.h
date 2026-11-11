@@ -15,6 +15,7 @@ extern "C" {
 
 typedef struct icon (*core_icon_fn)(struct icon i, unsigned ref, unsigned type,
 	unsigned player_ref);
+typedef int (*core_art_fn)(unsigned ref, unsigned type, char *buf, size_t len);
 
 #ifdef __cplusplus
 }
