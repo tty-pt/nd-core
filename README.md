@@ -18,10 +18,11 @@ cannot observe a co-implemented chain. See `include/nd/core.h`.
 make install
 ```
 
-Installs one file:
+Installs:
 
 ```
 lib/libnd-core.so
+include/nd/core-types.h
 include/nd/core.h
 ```
 
@@ -67,14 +68,14 @@ Fallback glyphs, ANSI palettes, and base symbol mappings.
 
 ## Wire Protocol & BCP Integration
 
-Supplies decorated `struct icon` representations (color, character, action masks) into `BCP_ITEM` binary packets transmitted to clients.
+Supplies decorated `struct icon` representations (color, character, action masks) and deterministic art-variant paths (`core_art_resolve`) into `BCP_ITEM` binary packets transmitted to clients.
 
 ## Modder Extension Guide
 
-Modders can hook entity appearances using `core_icon_decorate`:
-1. Include `<nd/core.h>` in your module.
-2. Implement a decorator function matching the signature `struct icon (*)(struct icon, unsigned ref, unsigned type, unsigned player_ref)`.
-3. Call `core_icon_decorate(my_decorator)` inside your `xy_install()`.
+Modders can hook entity appearances using `core_icon_decorate` and `core_art_decorate`:
+1. Include `<nd/core.h>` (which pulls in `<nd/core-types.h>`) in your module.
+2. Implement an icon decorator matching `struct icon (*)(struct icon, unsigned ref, unsigned type, unsigned player_ref)` and/or an art-variant decorator matching `int (*core_art_fn)(unsigned ref, unsigned type, char *buf, size_t len)`.
+3. Call `core_icon_decorate(my_decorator)` and/or `core_art_decorate(my_art_decorator)` inside your `xy_install()`.
 
 ## Using it
 
@@ -120,7 +121,7 @@ which is what the engine's suite greps to confirm a decorator took effect.
 
 One TU must not both `XY_IMPL` and `XY_DECL` the same name — that is the XY
 equivalent of the old `SIC_DEF`/`SIC_DECL` collision, a build error at best and a
-silently wrong dispatch at worst. Hence the `CORE_IMPL` guard in the header.
+silently wrong dispatch at worst. Hence the two-header separation between `<nd/core-types.h>` (pure types) and `<nd/core.h>` (declarations).
 
 ## Testing
 

@@ -33,6 +33,8 @@ typedef sic_str_t (*core_empty_tile_fn)(view_tile_t t, unsigned side, sic_str_t 
 
 XY_DECL(int, core_noise_decorate, core_noise_fn, fn);
 XY_DECL(int, core_empty_tile_decorate, core_empty_tile_fn, fn);
+XY_DECL(int, core_art_decorate, core_art_fn, fn);
+XY_DECL(int, core_art_resolve, unsigned, ref, unsigned, type, char *, buf, size_t, len);
 
 #ifdef __cplusplus
 }
